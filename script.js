@@ -1,50 +1,44 @@
-//your JS code here. If required.
-// Function to show an alert with the current username
-function showAlert(username) {
-    alert(`Logged in as ${username}.`);
-}
+// Load existing credentials on page load
+window.addEventListener('DOMContentLoaded', () => {
+  const savedUsername = localStorage.getItem('username');
+  const savedPassword = localStorage.getItem('password');
 
-// Function to handle form submission
-function handleFormSubmit(event) {
-    event.preventDefault();
+  if (savedUsername && savedPassword) {
+    document.getElementById('existing').style.display = 'inline-block';
+  }
+});
 
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    const rememberMe = document.getElementById('checkbox').checked;
+// Handle form submission
+document.getElementById('loginForm').addEventListener('submit', function (e) {
+  e.preventDefault();
 
-    if (rememberMe) {
-        localStorage.setItem('username', username);
-        localStorage.setItem('password', password);
-    } else {
-        localStorage.removeItem('username');
-        localStorage.removeItem('password');
-    }
+  const username = document.getElementById('username').value.trim();
+  const password = document.getElementById('password').value.trim();
+  const remember = document.getElementById('checkbox').checked;
 
-    showAlert(username);
-    updateExistingButton();
-}
+  alert(`Logged in as ${username}`);
 
-// Function to handle login as existing user
-function handleExistingUserLogin() {
-    const username = localStorage.getItem('username');
-    if (username) {
-        showAlert(username);
-    }
-}
+  if (remember) {
+    localStorage.setItem('username', username);
+    localStorage.setItem('password', password);
+  } else {
+    localStorage.removeItem('username');
+    localStorage.removeItem('password');
+  }
 
-// Function to update the visibility of the "Login as existing user" button
-function updateExistingButton() {
-    const existingButton = document.getElementById('existing');
-    if (localStorage.getItem('username')) {
-        existingButton.style.display = 'block';
-    } else {
-        existingButton.style.display = 'none';
-    }
-}
+  // Show or hide "existing user" button based on credentials
+  const existingBtn = document.getElementById('existing');
+  if (localStorage.getItem('username') && localStorage.getItem('password')) {
+    existingBtn.style.display = 'inline-block';
+  } else {
+    existingBtn.style.display = 'none';
+  }
+});
 
-// Add event listeners when the DOM is fully loaded
-document.addEventListener('DOMContentLoaded', () => {
-    updateExistingButton();
-    document.getElementById('login-form').addEventListener('submit', handleFormSubmit);
-    document.getElementById('existing').addEventListener('click', handleExistingUserLogin);
+// Handle "Login as existing user"
+document.getElementById('existing').addEventListener('click', () => {
+  const username = localStorage.getItem('username');
+  if (username) {
+    alert(`Logged in as ${username}`);
+  }
 });
